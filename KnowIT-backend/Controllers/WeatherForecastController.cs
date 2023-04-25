@@ -3,7 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 namespace KnowIT_backend.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]/[action]")]
+
     public class WeatherForecastController : ControllerBase
     {
         private static readonly string[] Summaries = new[]
@@ -18,7 +19,9 @@ namespace KnowIT_backend.Controllers
             _logger = logger;
         }
 
-        [HttpGet(Name = "GetWeatherForecast")]
+        [HttpGet]
+        [ActionName("GetWeatherForecast")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type=typeof(IEnumerable<WeatherForecast>))]
         public IEnumerable<WeatherForecast> Get()
         {
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast
@@ -28,6 +31,19 @@ namespace KnowIT_backend.Controllers
                 Summary = Summaries[Random.Shared.Next(Summaries.Length)]
             })
             .ToArray();
+        }
+
+        [HttpGet]
+        [ActionName("GetWeather")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(WeatherForecast))]
+        public WeatherForecast GetWeather()
+        {
+            return new WeatherForecast
+            {
+                Date = DateTime.Now,
+                TemperatureC = Random.Shared.Next(-20, 55),
+                Summary = Summaries[Random.Shared.Next(Summaries.Length)]
+            };
         }
     }
 }
